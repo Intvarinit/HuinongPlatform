@@ -27,4 +27,6 @@ public class RecoveryRecord extends BaseEntity {
     private Long operatorId; // 操作人ID
     
     private LocalDateTime appointmentTime; // 预约时间
+    
+    private String images; // 图片URL列表，多个用逗号分隔或JSON数组
 } 

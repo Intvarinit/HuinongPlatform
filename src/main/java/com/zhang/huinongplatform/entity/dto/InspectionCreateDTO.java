@@ -3,6 +3,7 @@ package com.zhang.huinongplatform.entity.dto;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class InspectionCreateDTO {
@@ -13,4 +14,5 @@ public class InspectionCreateDTO {
     private BigDecimal humidity;
     private BigDecimal phValue;
     private String remark;
+    private List<String> images; // 图片URL列表
 } 

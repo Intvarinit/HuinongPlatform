@@ -46,6 +46,10 @@ spring:
           max-interval: 10000
           multiplier: 2.0
 
+#  web:
+#    resources:
+#      static-locations: classpath:/static/,classpath:/public/,classpath:/resources/,classpath:/META-INF/resources/,file:src/main/resources/upload/
+
 # MyBatis Plus配置
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml

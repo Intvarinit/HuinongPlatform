@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 public class InspectionRecordController {
     private final InspectionRecordService inspectionRecordService;
 
-    @Operation(summary = "新增抽检记录", description = "管理员/质检员新增抽检记录")
+    @Operation(summary = "新增抽检记录", description = "管理员/质检员新增抽检记录。图片请先通过 /api/common/upload/image 上传，images 字段为图片URL数组（如 ['/upload/xxx.png']）")
     @SaCheckLogin
     @SaCheckRole({"admin", "inspector"})
     @PostMapping("/create")

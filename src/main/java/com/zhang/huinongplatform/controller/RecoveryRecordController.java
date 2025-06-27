@@ -25,7 +25,7 @@ import java.util.List;
 public class RecoveryRecordController {
     private final RecoveryRecordService recoveryRecordService;
 
-    @Operation(summary = "提交回收申请", description = "农户提交回收申请，需登录")
+    @Operation(summary = "提交回收申请", description = "农户提交回收申请，需登录。图片请先通过 /api/common/upload/image 上传，images 字段为图片URL数组（如 ['/upload/xxx.png']）")
     @SaCheckLogin
     @OperationLog("提交回收申请")
     @PostMapping("/apply")

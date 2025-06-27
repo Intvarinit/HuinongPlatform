@@ -19,4 +19,5 @@ public class InspectionRecord extends BaseEntity {
     private BigDecimal humidity;
     private BigDecimal phValue;
     private String remark;
+    private String images; // 图片URL列表，多个用逗号分隔或JSON数组
 } 
