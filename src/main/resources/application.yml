@@ -1,0 +1,81 @@
+server:
+  port: 8080
+
+logging:
+  file:
+    name: logs/huinong-platform-error.log     #在classpath根目录创建对应文件
+  level:
+    root: error   #日志记录级别
+
+
+spring:
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/huinong_platform?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 10000  
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
+  
+  # RabbitMQ配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-attempts: 3
+          max-interval: 10000
+          multiplier: 2.0
+
+# MyBatis Plus配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: com.zhang.huinongplatform.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      db-type: mysql
+
+# Sa-Token配置
+sa-token:
+  token-name: Authorization
+  is-concurrent: false   # 不允许同账号多地同时登录
+  is-share: false        # 不共享 session
+  timeout: 2592000
+  active-timeout: -1
+  token-style: uuid
+  is-log: false
+  token-prefix: Bearer
+
+# 阿里云短信配置
+# aliyun:
+#   sms:
+#     access-key-id: your-access-key-id
+#     access-key-secret: your-access-key-secret
+#     sign-name: 慧农平台
+#     template-code: SMS_123456789 
