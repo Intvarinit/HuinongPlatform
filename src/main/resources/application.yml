@@ -72,6 +72,16 @@ sa-token:
   is-log: false
   token-prefix: Bearer
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  info:
+    title: 慧农循环管理平台 API
+    description: 后端接口文档
+    version: 1.0.0
+
 # 阿里云短信配置
 # aliyun:
 #   sms:

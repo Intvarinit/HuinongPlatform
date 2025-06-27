@@ -11,14 +11,18 @@ import com.zhang.huinongplatform.service.CompostRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.zhang.huinongplatform.annotation.OperationLog;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 
+@Tag(name = "堆肥批次管理", description = "堆肥批次的创建、更新、查询、导出、统计等接口")
 @RestController
 @RequestMapping("/api/compost")
 @RequiredArgsConstructor
 public class CompostRecordController {
     private final CompostRecordService compostRecordService;
 
-    // 创建堆肥批次（管理员/质检员）
+    @Operation(summary = "创建堆肥批次", description = "管理员/质检员创建堆肥批次")
     @SaCheckLogin
     @OperationLog("创建堆肥批次")
     @SaCheckRole({"admin", "inspector"})
@@ -28,7 +32,7 @@ public class CompostRecordController {
         return Result.success();
     }
 
-    // 更新堆肥批次（管理员/质检员）
+    @Operation(summary = "更新堆肥批次", description = "管理员/质检员更新堆肥批次")
     @SaCheckLogin
     @OperationLog("更新堆肥批次")
     @SaCheckRole({"admin", "inspector"})
@@ -38,51 +42,54 @@ public class CompostRecordController {
         return Result.success();
     }
 
-    // 查询堆肥批次详情
+    @Operation(summary = "查询堆肥批次详情", description = "根据ID查询堆肥批次详情")
     @SaCheckLogin
     @GetMapping("/detail/{id}")
-    public Result<CompostRecord> detail(@PathVariable Long id) {
+    public Result<CompostRecord> detail(@Parameter(description = "堆肥批次ID") @PathVariable Long id) {
         return Result.success(compostRecordService.getById(id));
     }
 
-    // 分页查询某回收记录下的所有堆肥批次
+    @Operation(summary = "分页查询堆肥批次", description = "分页查询某回收记录下的所有堆肥批次")
     @SaCheckLogin
     @GetMapping("/page")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<CompostRecord>> page(
-            @RequestParam Long recoveryId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @Parameter(description = "回收记录ID") @RequestParam Long recoveryId,
+            @Parameter(description = "页码", example = "1") @RequestParam(defaultValue = "1") int page,
+            @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size) {
         return Result.success(compostRecordService.pageByRecoveryId(recoveryId, page, size));
     }
 
-    // 完成堆肥批次（管理员/质检员）
+    @Operation(summary = "完成堆肥批次", description = "管理员/质检员完成堆肥批次")
     @SaCheckLogin
     @OperationLog("完成堆肥批次")
     @SaCheckRole({"admin", "inspector"})
     @PostMapping("/finish/{id}")
-    public Result<Void> finish(@PathVariable Long id, @RequestParam(required = false) String remark) {
+    public Result<Void> finish(@Parameter(description = "堆肥批次ID") @PathVariable Long id,
+                              @Parameter(description = "备注") @RequestParam(required = false) String remark) {
         compostRecordService.finishCompost(id, remark);
         return Result.success();
     }
 
-    // 标记异常（管理员/质检员）
+    @Operation(summary = "异常标记堆肥批次", description = "管理员/质检员将堆肥批次标记为异常")
     @SaCheckLogin
     @OperationLog("异常标记堆肥批次")
     @SaCheckRole({"admin", "inspector"})
     @PostMapping("/abnormal/{id}")
-    public Result<Void> abnormal(@PathVariable Long id, @RequestParam(required = false) String remark) {
+    public Result<Void> abnormal(@Parameter(description = "堆肥批次ID") @PathVariable Long id,
+                                @Parameter(description = "备注") @RequestParam(required = false) String remark) {
         compostRecordService.markAbnormal(id, remark);
         return Result.success();
     }
 
-    // 导出指定回收记录下堆肥批次为Excel
+    @Operation(summary = "导出指定回收记录下堆肥批次为Excel", description = "导出某回收记录下的堆肥批次")
     @SaCheckLogin
     @GetMapping("/export")
-    public void export(@RequestParam Long recoveryId, javax.servlet.http.HttpServletResponse response) throws Exception {
+    public void export(@Parameter(description = "回收记录ID") @RequestParam Long recoveryId,
+                      javax.servlet.http.HttpServletResponse response) throws Exception {
         compostRecordService.exportByRecoveryIdExcel(recoveryId, response);
     }
 
-    // 导出全部堆肥批次Excel（管理员/质检员）
+    @Operation(summary = "导出全部堆肥批次Excel", description = "管理员/质检员导出全部堆肥批次")
     @SaCheckLogin
     @SaCheckRole({"admin", "inspector"})
     @GetMapping("/export/all")
@@ -90,22 +97,24 @@ public class CompostRecordController {
         compostRecordService.exportCompostExcel(response);
     }
 
-    // 异常率统计接口
+    @Operation(summary = "异常率统计", description = "统计堆肥批次异常率")
     @SaCheckRole("admin")
     @GetMapping("/exception-rate")
-    public Result<CompostRateDTO> getExceptionRate(@RequestParam String startDate,
-                                                  @RequestParam String endDate) {
+    public Result<CompostRateDTO> getExceptionRate(
+        @Parameter(description = "起始日期", example = "2024-06-01") @RequestParam String startDate,
+        @Parameter(description = "结束日期", example = "2024-06-30") @RequestParam String endDate) {
         double rate = compostRecordService.getCompostExceptionRate(startDate, endDate);
         CompostRateDTO dto = new CompostRateDTO();
         dto.setRate(rate);
         return Result.success(dto);
     }
 
-    // 合格率统计接口
+    @Operation(summary = "合格率统计", description = "统计堆肥批次合格率")
     @SaCheckRole("admin")
     @GetMapping("/pass-rate")
-    public Result<CompostRateDTO> getPassRate(@RequestParam String startDate,
-                                             @RequestParam String endDate) {
+    public Result<CompostRateDTO> getPassRate(
+        @Parameter(description = "起始日期", example = "2024-06-01") @RequestParam String startDate,
+        @Parameter(description = "结束日期", example = "2024-06-30") @RequestParam String endDate) {
         double rate = compostRecordService.getCompostPassRate(startDate, endDate);
         CompostRateDTO dto = new CompostRateDTO();
         dto.setRate(rate);
