@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zhang.huinongplatform.common.BizException;
 import com.zhang.huinongplatform.entity.User;
 import com.zhang.huinongplatform.entity.dto.LoginDTO;
+import com.zhang.huinongplatform.entity.dto.LoginByCodeDTO;
 import com.zhang.huinongplatform.entity.dto.RegisterDTO;
 import com.zhang.huinongplatform.mapper.UserMapper;
 import com.zhang.huinongplatform.service.UserService;
+import com.zhang.huinongplatform.service.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+    private final VerificationCodeService verificationCodeService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -38,6 +41,39 @@ public class UserServiceImpl implements UserService {
         }
         
         // 校验状态
+        if (user.getStatus() == 0) {
+            throw new BizException("账号已被禁用");
+        }
+        
+        // 登录
+        StpUtil.login(user.getId());
+        
+        return StpUtil.getTokenValue();
+    }
+
+    @Override
+    public String loginByCode(LoginByCodeDTO loginByCodeDTO) {
+        // 验证验证码
+        boolean isValidCode = verificationCodeService.verifyLoginCode(
+            loginByCodeDTO.getPhone(), 
+            loginByCodeDTO.getCode()
+        );
+        
+        if (!isValidCode) {
+            throw new BizException("验证码错误或已过期");
+        }
+        
+        // 根据手机号查询用户
+        User user = userMapper.selectOne(
+            new LambdaQueryWrapper<User>()
+                .eq(User::getPhone, loginByCodeDTO.getPhone())
+        );
+        
+        if (user == null) {
+            throw new BizException("用户不存在，请先注册");
+        }
+        
+        // 校验用户状态
         if (user.getStatus() == 0) {
             throw new BizException("账号已被禁用");
         }

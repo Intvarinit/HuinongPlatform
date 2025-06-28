@@ -2,11 +2,20 @@ server:
   port: 8080
 
 logging:
-  file:
-    name: logs/huinong-platform-error.log     #在classpath根目录创建对应文件
   level:
-    root: error   #日志记录级别
-
+    root: info  # 根日志级别
+    com.zhang.huinongplatform: info  # 项目包的日志级别
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/huinong-platform.log  # 普通日志文件
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+      total-size-cap: 1GB
+  config: classpath:logback-spring.xml  # 使用自定义logback配置
 
 spring:
   # 数据库配置
@@ -87,9 +96,16 @@ springdoc:
     version: 1.0.0
 
 # 阿里云短信配置
-# aliyun:
-#   sms:
-#     access-key-id: your-access-key-id
-#     access-key-secret: your-access-key-secret
-#     sign-name: 慧农平台
-#     template-code: SMS_123456789 
+aliyun:
+  sms:
+    access-key-id: ${ALIBABA_CLOUD_ACCESS_KEY_ID:your_access_key_id}
+    access-key-secret: ${ALIBABA_CLOUD_ACCESS_KEY_SECRET:your_access_key_secret}
+    region-id: cn-hangzhou
+    sign-name: 慧农平台
+    template-code: SMS_123456789
+    # 验证码模板参数
+    verification-template-code: SMS_123456789
+    # 通知模板参数
+    notification-template-code: SMS_987654321
+    # 模拟模式：true-返回假消息，false-真实发送
+    mock-mode: true 

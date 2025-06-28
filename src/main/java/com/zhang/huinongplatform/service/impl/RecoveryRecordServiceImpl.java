@@ -7,6 +7,7 @@ import com.zhang.huinongplatform.entity.RecoveryRecord;
 import com.zhang.huinongplatform.entity.dto.RecoveryApplyDTO;
 import com.zhang.huinongplatform.entity.dto.RecoveryAuditDTO;
 import com.zhang.huinongplatform.mapper.RecoveryRecordMapper;
+import com.zhang.huinongplatform.service.MessageService;
 import com.zhang.huinongplatform.service.RecoveryRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecoveryRecordServiceImpl implements RecoveryRecordService {
     private final RecoveryRecordMapper recoveryRecordMapper;
+    private final MessageService messageService;
 
     @Override
     public void applyRecovery(RecoveryApplyDTO dto) {
@@ -29,6 +31,14 @@ public class RecoveryRecordServiceImpl implements RecoveryRecordService {
         record.setCreateTime(LocalDateTime.now());
         record.setUpdateTime(LocalDateTime.now());
         recoveryRecordMapper.insert(record);
+        
+        // 发送申请提交通知
+        try {
+            messageService.sendRecoveryProgressUpdate(record.getUserId(), record.getId(), "回收申请已提交，等待审核");
+        } catch (Exception e) {
+            // 短信发送失败不影响主流程
+            System.err.println("发送回收申请通知失败: " + e.getMessage());
+        }
     }
 
     @Override
@@ -41,6 +51,28 @@ public class RecoveryRecordServiceImpl implements RecoveryRecordService {
         record.setRemark(dto.getRemark());
         record.setUpdateTime(LocalDateTime.now());
         recoveryRecordMapper.updateById(record);
+        
+        // 发送审核结果通知
+        try {
+            String progress;
+            switch (dto.getStatus()) {
+                case 1:
+                    progress = "回收申请已通过审核";
+                    break;
+                case 2:
+                    progress = "回收申请被拒绝：" + (dto.getRemark() != null ? dto.getRemark() : "无");
+                    break;
+                case 3:
+                    progress = "回收已完成";
+                    break;
+                default:
+                    progress = "回收状态已更新";
+            }
+            messageService.sendRecoveryProgressUpdate(record.getUserId(), record.getId(), progress);
+        } catch (Exception e) {
+            // 短信发送失败不影响主流程
+            System.err.println("发送回收审核通知失败: " + e.getMessage());
+        }
     }
 
     @Override

@@ -9,15 +9,18 @@ public class RabbitMQConfig {
     
     public static final String RECOVERY_EXCHANGE = "recovery_exchange";
     public static final String USER_EXCHANGE = "user_exchange";
+    public static final String SMS_EXCHANGE = "sms_exchange";
     
     public static final String RECOVERY_NOTIFICATION_QUEUE = "recovery_notification_queue";
     public static final String USER_VERIFICATION_QUEUE = "user_verification_queue";
     public static final String DATA_SYNC_QUEUE = "data_sync_queue";
     public static final String INSPECTION_NOTIFICATION_QUEUE = "inspection_notification_queue";
+    public static final String SMS_NOTIFICATION_QUEUE = "sms_notification_queue";
     
     public static final String RECOVERY_NOTIFICATION_ROUTING_KEY = "recovery.notification";
     public static final String USER_VERIFICATION_ROUTING_KEY = "user.verification";
     public static final String DATA_SYNC_ROUTING_KEY = "data.sync";
+    public static final String SMS_NOTIFICATION_ROUTING_KEY = "sms.notification";
     
     // 回收进度通知交换机
     @Bean
@@ -31,6 +34,12 @@ public class RabbitMQConfig {
         return new DirectExchange(USER_EXCHANGE);
     }
     
+    // 短信通知交换机
+    @Bean
+    public DirectExchange smsExchange() {
+        return new DirectExchange(SMS_EXCHANGE);
+    }
+    
     // 回收通知队列
     @Bean
     public Queue recoveryNotificationQueue() {
@@ -41,6 +50,12 @@ public class RabbitMQConfig {
     @Bean
     public Queue userVerificationQueue() {
         return new Queue(USER_VERIFICATION_QUEUE);
+    }
+    
+    // 短信通知队列
+    @Bean
+    public Queue smsNotificationQueue() {
+        return new Queue(SMS_NOTIFICATION_QUEUE);
     }
     
     // 死信交换机
@@ -89,6 +104,14 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(userVerificationQueue())
                 .to(userExchange())
                 .with(USER_VERIFICATION_ROUTING_KEY);
+    }
+    
+    // 绑定短信通知队列到交换机
+    @Bean
+    public Binding bindingSmsNotification() {
+        return BindingBuilder.bind(smsNotificationQueue())
+                .to(smsExchange())
+                .with(SMS_NOTIFICATION_ROUTING_KEY);
     }
     
     // 绑定数据同步队列到交换机

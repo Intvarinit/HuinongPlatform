@@ -2,16 +2,24 @@ package com.zhang.huinongplatform.service;
 
 import com.zhang.huinongplatform.entity.User;
 import com.zhang.huinongplatform.entity.dto.LoginDTO;
+import com.zhang.huinongplatform.entity.dto.LoginByCodeDTO;
 import com.zhang.huinongplatform.entity.dto.RegisterDTO;
 
 public interface UserService {
     
     /**
-     * 用户登录
+     * 用户登录（用户名密码）
      * @param loginDTO 登录信息
      * @return token
      */
     String login(LoginDTO loginDTO);
+    
+    /**
+     * 用户登录（验证码）
+     * @param loginByCodeDTO 验证码登录信息
+     * @return token
+     */
+    String loginByCode(LoginByCodeDTO loginByCodeDTO);
     
     /**
      * 用户注册
