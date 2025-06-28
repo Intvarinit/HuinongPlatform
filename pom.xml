@@ -110,6 +110,12 @@
             <version>1.7.0</version>
         </dependency>
 
+        <!-- YAML支持 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+
         <!-- 阿里云短信SDK核心库 -->
         <dependency>
             <groupId>com.aliyun</groupId>
