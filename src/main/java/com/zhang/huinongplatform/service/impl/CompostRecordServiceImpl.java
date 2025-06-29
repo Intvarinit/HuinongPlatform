@@ -172,6 +172,41 @@ public class CompostRecordServiceImpl implements CompostRecordService {
     }
 
     @Override
+    public com.baomidou.mybatisplus.extension.plugins.pagination.Page<CompostRecord> pageCompost(Long recoveryId, Integer status, int page, int size) {
+        com.baomidou.mybatisplus.extension.plugins.pagination.Page<CompostRecord> p = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(page, size);
+        com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<CompostRecord> wrapper;
+        
+        if (recoveryId != null) {
+            // 查询指定回收记录下的堆肥批次
+            wrapper = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<CompostRecord>()
+                    .eq(CompostRecord::getRecoveryId, recoveryId)
+                    .orderByDesc(CompostRecord::getCreateTime);
+            
+            // 权限控制：普通用户只能查自己相关的recoveryId
+            if (!cn.dev33.satoken.stp.StpUtil.hasRole("admin")) {
+                RecoveryRecord rec = recoveryRecordMapper.selectById(recoveryId);
+                if (rec == null || !rec.getUserId().equals(cn.dev33.satoken.stp.StpUtil.getLoginIdAsLong())) {
+                    throw new com.zhang.huinongplatform.common.BizException("无权查看该回收记录下的堆肥批次");
+                }
+            }
+        } else {
+            // 查询所有堆肥批次，需要管理员权限
+            if (!cn.dev33.satoken.stp.StpUtil.hasRole("admin")) {
+                throw new com.zhang.huinongplatform.common.BizException("需要管理员权限才能查看所有堆肥批次");
+            }
+            wrapper = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<CompostRecord>()
+                    .orderByDesc(CompostRecord::getCreateTime);
+        }
+        
+        // 添加状态筛选条件
+        if (status != null) {
+            wrapper.eq(CompostRecord::getStatus, status);
+        }
+        
+        return compostRecordMapper.selectPage(p, wrapper);
+    }
+
+    @Override
     public void exportCompostExcel(javax.servlet.http.HttpServletResponse response) {
         java.util.List<CompostRecord> list = compostRecordMapper.selectList(new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<CompostRecord>().eq(CompostRecord::getDeleted, 0));
         try {

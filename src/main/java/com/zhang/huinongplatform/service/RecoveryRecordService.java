@@ -26,12 +26,12 @@ public interface RecoveryRecordService {
     /**
      * 查询当前用户的回收记录（分页，默认page=1，size=10）
      */
-    com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageMyRecords(int page, int size);
+    com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageMyRecords(int page, int size, Integer status, String cropType);
 
     /**
      * 管理员查询所有回收记录（分页，默认page=1，size=10）
      */
-    com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageAllRecords(int page, int size);
+    com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageAllRecords(int page, int size, Integer status, String cropType);
 
     void deleteRecovery(Long id);
 

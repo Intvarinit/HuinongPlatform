@@ -33,6 +33,9 @@ public class CompostProgressLogController {
         @Parameter(description = "堆肥批次ID") @RequestParam Long compostId,
         @Parameter(description = "页码", example = "1") @RequestParam(defaultValue = "1") int page,
         @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size) {
+        if (compostId == null || compostId <= 0) {
+            throw new com.zhang.huinongplatform.common.BizException("堆肥批次ID不能为空且必须大于0");
+        }
         return Result.success(compostProgressLogService.pageByCompostId(compostId, page, size));
     }
 } 

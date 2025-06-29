@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface InspectionRecordService {
     void createInspection(InspectionCreateDTO dto);
-    Page<InspectionRecord> pageInspection(Long compostId, int page, int size);
+    Page<InspectionRecord> pageInspection(Long compostId, Integer result, int page, int size);
     InspectionRecord getById(Long id);
     void exportInspectionExcel(Long compostId, HttpServletResponse response) throws Exception;
     boolean isCompostBelongToUser(Long compostId, Long userId);

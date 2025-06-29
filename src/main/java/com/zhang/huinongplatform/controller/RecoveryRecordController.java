@@ -49,8 +49,10 @@ public class RecoveryRecordController {
     @GetMapping("/my")
     public Result<Page<RecoveryRecord>> myRecords(
         @Parameter(description = "页码", example = "1") @RequestParam(defaultValue = "1") int page,
-        @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size) {
-        return Result.success(recoveryRecordService.pageMyRecords(page, size));
+        @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size,
+        @Parameter(description = "状态", example = "1") @RequestParam(required = false) Integer status,
+        @Parameter(description = "作物类型", example = "wheat") @RequestParam(required = false) String cropType) {
+        return Result.success(recoveryRecordService.pageMyRecords(page, size, status, cropType));
     }
 
     @Operation(summary = "分页查询所有回收记录", description = "管理员/质检员分页查询所有回收记录")
@@ -59,8 +61,10 @@ public class RecoveryRecordController {
     @GetMapping("/all")
     public Result<Page<RecoveryRecord>> allRecords(
         @Parameter(description = "页码", example = "1") @RequestParam(defaultValue = "1") int page,
-        @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size) {
-        return Result.success(recoveryRecordService.pageAllRecords(page, size));
+        @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size,
+        @Parameter(description = "状态", example = "1") @RequestParam(required = false) Integer status,
+        @Parameter(description = "作物类型", example = "wheat") @RequestParam(required = false) String cropType) {
+        return Result.success(recoveryRecordService.pageAllRecords(page, size, status, cropType));
     }
 
     @Operation(summary = "查询回收记录详情", description = "根据ID查询回收记录详情")

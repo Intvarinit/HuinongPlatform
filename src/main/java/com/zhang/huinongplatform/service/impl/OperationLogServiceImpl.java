@@ -30,4 +30,9 @@ public class OperationLogServiceImpl implements OperationLogService {
         wrapper.orderByDesc(OperationLog::getCreateTime);
         return operationLogMapper.selectPage(new Page<>(page, size), wrapper);
     }
+
+    @Override
+    public void removeById(Long id) {
+        operationLogMapper.deleteById(id);
+    }
 } 

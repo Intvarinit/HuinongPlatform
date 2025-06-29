@@ -49,14 +49,15 @@ public class CompostRecordController {
         return Result.success(compostRecordService.getById(id));
     }
 
-    @Operation(summary = "分页查询堆肥批次", description = "分页查询某回收记录下的所有堆肥批次")
+    @Operation(summary = "分页查询堆肥批次", description = "分页查询堆肥批次。支持按recoveryId和status筛选，不传recoveryId时查询所有批次（需管理员权限）")
     @SaCheckLogin
     @GetMapping("/page")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<CompostRecord>> page(
-            @Parameter(description = "回收记录ID") @RequestParam Long recoveryId,
+            @Parameter(description = "回收记录ID（可选）") @RequestParam(required = false) Long recoveryId,
+            @Parameter(description = "状态（0进行中、1已完成、2异常、3已取消，可选）") @RequestParam(required = false) Integer status,
             @Parameter(description = "页码", example = "1") @RequestParam(defaultValue = "1") int page,
             @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size) {
-        return Result.success(compostRecordService.pageByRecoveryId(recoveryId, page, size));
+        return Result.success(compostRecordService.pageCompost(recoveryId, status, page, size));
     }
 
     @Operation(summary = "完成堆肥批次", description = "管理员/质检员完成堆肥批次")

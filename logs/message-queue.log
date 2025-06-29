@@ -1,0 +1,2 @@
+2025-06-29 11:58:18 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#2-1] INFO  c.z.h.mq.SmsNotificationConsumer - 收到短信通知消息 - 类型: verification_sms, 手机号: 13838383838, 消息: {code=104592, phone=13838383838, type=verification_sms}
+2025-06-29 11:58:18 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#2-1] INFO  c.z.h.mq.SmsNotificationConsumer - 验证码短信发送成功 - 手机号: 13838383838, 验证码: 104592

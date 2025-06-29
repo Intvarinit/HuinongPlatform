@@ -90,21 +90,27 @@ public class RecoveryRecordServiceImpl implements RecoveryRecordService {
     }
 
     @Override
-    public com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageMyRecords(int page, int size) {
+    public com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageMyRecords(int page, int size, Integer status, String cropType) {
         Long userId = cn.dev33.satoken.stp.StpUtil.getLoginIdAsLong();
         com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> p = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(page, size);
-        return recoveryRecordMapper.selectPage(p, new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<RecoveryRecord>()
+        com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<RecoveryRecord> wrapper = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<RecoveryRecord>()
                 .eq(RecoveryRecord::getUserId, userId)
-                .eq(RecoveryRecord::getDeleted, 0)
-                .orderByDesc(RecoveryRecord::getCreateTime));
+                .eq(RecoveryRecord::getDeleted, 0);
+        if (status != null) wrapper.eq(RecoveryRecord::getStatus, status);
+        if (cropType != null && !cropType.isEmpty()) wrapper.eq(RecoveryRecord::getCropType, cropType);
+        wrapper.orderByDesc(RecoveryRecord::getCreateTime);
+        return recoveryRecordMapper.selectPage(p, wrapper);
     }
 
     @Override
-    public com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageAllRecords(int page, int size) {
+    public com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> pageAllRecords(int page, int size, Integer status, String cropType) {
         com.baomidou.mybatisplus.extension.plugins.pagination.Page<RecoveryRecord> p = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(page, size);
-        return recoveryRecordMapper.selectPage(p, new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<RecoveryRecord>()
-                .eq(RecoveryRecord::getDeleted, 0)
-                .orderByDesc(RecoveryRecord::getCreateTime));
+        com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<RecoveryRecord> wrapper = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<RecoveryRecord>()
+                .eq(RecoveryRecord::getDeleted, 0);
+        if (status != null) wrapper.eq(RecoveryRecord::getStatus, status);
+        if (cropType != null && !cropType.isEmpty()) wrapper.eq(RecoveryRecord::getCropType, cropType);
+        wrapper.orderByDesc(RecoveryRecord::getCreateTime);
+        return recoveryRecordMapper.selectPage(p, wrapper);
     }
 
     @Override

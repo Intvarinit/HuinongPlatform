@@ -30,21 +30,15 @@ public class InspectionRecordController {
         return Result.success();
     }
 
-    @Operation(summary = "分页查询抽检记录", description = "分页查询某堆肥批次下的抽检记录")
+    @Operation(summary = "分页查询抽检记录", description = "分页查询抽检记录。不传compostId时查询所有记录（需管理员权限），传compostId时查询指定堆肥批次下的记录")
     @SaCheckLogin
     @GetMapping("/page")
     public Result<Page<InspectionRecord>> page(
-        @Parameter(description = "堆肥批次ID") @RequestParam Long compostId,
+        @Parameter(description = "堆肥批次ID（可选）") @RequestParam(required = false) Long compostId,
+        @Parameter(description = "抽检结果（1合格，0不合格，只有选择时才传递）") @RequestParam(required = false)Integer result,
         @Parameter(description = "页码", example = "1") @RequestParam(defaultValue = "1") int page,
         @Parameter(description = "每页数量", example = "10") @RequestParam(defaultValue = "10") int size) {
-        if (cn.dev33.satoken.stp.StpUtil.hasRole("admin") || cn.dev33.satoken.stp.StpUtil.hasRole("inspector")) {
-            return Result.success(inspectionRecordService.pageInspection(compostId, page, size));
-        } else {
-            if (!inspectionRecordService.isCompostBelongToUser(compostId, cn.dev33.satoken.stp.StpUtil.getLoginIdAsLong())) {
-                throw new com.zhang.huinongplatform.common.BizException("无权查看该抽检记录");
-            }
-            return Result.success(inspectionRecordService.pageInspection(compostId, page, size));
-        }
+        return Result.success(inspectionRecordService.pageInspection(compostId,result, page, size));
     }
 
     @Operation(summary = "查询抽检详情", description = "根据ID查询抽检详情")
@@ -68,6 +62,9 @@ public class InspectionRecordController {
     @GetMapping("/export")
     public void export(@Parameter(description = "堆肥批次ID") @RequestParam Long compostId,
                       HttpServletResponse response) throws Exception {
+        if (compostId == null || compostId <= 0) {
+            throw new com.zhang.huinongplatform.common.BizException("堆肥批次ID不能为空且必须大于0");
+        }
         inspectionRecordService.exportInspectionExcel(compostId, response);
     }
 } 

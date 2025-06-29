@@ -10,6 +10,7 @@ public interface CompostRecordService {
     void updateCompost(CompostUpdateDTO dto);
     CompostRecord getById(Long id);
     Page<CompostRecord> pageByRecoveryId(Long recoveryId, int page, int size);
+    Page<CompostRecord> pageCompost(Long recoveryId, Integer status, int page, int size);
     void finishCompost(Long id, String remark);
     void markAbnormal(Long id, String remark);
     void exportCompostExcel(javax.servlet.http.HttpServletResponse response);

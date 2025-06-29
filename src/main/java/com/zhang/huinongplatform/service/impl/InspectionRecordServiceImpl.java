@@ -48,12 +48,31 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
     }
 
     @Override
-    public Page<InspectionRecord> pageInspection(Long compostId, int page, int size) {
+    public Page<InspectionRecord> pageInspection(Long compostId, Integer result, int page, int size) {
         Page<InspectionRecord> p = new Page<>(page, size);
         LambdaQueryWrapper<InspectionRecord> wrapper = new LambdaQueryWrapper<InspectionRecord>()
-                .eq(InspectionRecord::getCompostId, compostId)
                 .eq(InspectionRecord::getDeleted, 0)
                 .orderByDesc(InspectionRecord::getInspectionTime);
+        
+        if (compostId != null && compostId > 0) {
+            // 查询指定堆肥批次下的抽检记录
+            wrapper.eq(InspectionRecord::getCompostId, compostId);
+            // 权限控制：普通用户只能查自己相关的compostId
+            if (!StpUtil.hasRole("admin") && !StpUtil.hasRole("inspector")) {
+                if (!isCompostBelongToUser(compostId, StpUtil.getLoginIdAsLong())) {
+                    throw new BizException("无权查看该抽检记录");
+                }
+            }
+        } else {
+            // 查询所有抽检记录，需要管理员权限
+            if (!StpUtil.hasRole("admin") && !StpUtil.hasRole("inspector")) {
+                throw new BizException("需要管理员权限才能查看所有抽检记录");
+            }
+        }
+        // 修复：result=0 也能筛选
+        if (result != null) {
+            wrapper.eq(InspectionRecord::getResult, result);
+        }
         return inspectionRecordMapper.selectPage(p, wrapper);
     }
 
