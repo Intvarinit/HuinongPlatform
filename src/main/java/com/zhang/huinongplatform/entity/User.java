@@ -18,7 +18,7 @@ public class User extends BaseEntity {
     
     private String realName;
     
-    private Integer userType; // 1: 农户, 2: 管理员
+    private Integer userType; // 1: admin, 2: inspector, 3:user
     
     private String address;
     

@@ -4,6 +4,7 @@ import com.zhang.huinongplatform.entity.User;
 import com.zhang.huinongplatform.entity.dto.LoginDTO;
 import com.zhang.huinongplatform.entity.dto.LoginByCodeDTO;
 import com.zhang.huinongplatform.entity.dto.RegisterDTO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 public interface UserService {
     
@@ -37,4 +38,10 @@ public interface UserService {
      * 退出登录
      */
     void logout();
+
+    IPage<User> getUserList(int pageNum, int pageSize, Integer userType, Integer status);
+
+    void updateUserType(Long id, Integer userType);
+
+    void updateUserStatus(Long id, Integer status);
 } 

@@ -1,6 +1,7 @@
 package com.zhang.huinongplatform.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.zhang.huinongplatform.common.Result;
 import com.zhang.huinongplatform.entity.User;
 import com.zhang.huinongplatform.entity.dto.LoginDTO;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 @Tag(name = "用户管理", description = "用户注册、登录、信息、注销等接口")
 @RestController
@@ -70,6 +74,41 @@ public class UserController {
     @PostMapping("/logout")
     public Result<Void> logout() {
         userService.logout();
+        return Result.success();
+    }
+
+    @Operation(summary = "用户分页列表", description = "分页+条件查询用户列表")
+    @SaCheckLogin
+    @GetMapping("/list")
+    public Result<IPage<User>> getUserList(
+        @RequestParam(defaultValue = "1") int pageNum,
+        @RequestParam(defaultValue = "10") int pageSize,
+        @RequestParam(required = false) Integer userType,
+        @RequestParam(required = false) Integer status
+    ) {
+        IPage<User> userPage = userService.getUserList(pageNum, pageSize, userType, status);
+        return Result.success(userPage);
+    }
+
+    @Operation(summary = "修改用户身份", description = "管理员功能：修改用户类型 1:管理员 2:抽检者 3:农户")
+    @SaCheckLogin
+    @SaCheckRole("admin") // 只有管理员可以访问
+    @PutMapping("/{id}/type")
+    public Result<Void> updateUserType(
+            @Parameter(description = "用户ID") @PathVariable Long id,
+            @Parameter(description = "用户类型 1:管理员 2:抽检者 3:农户") @RequestParam Integer userType) {
+        userService.updateUserType(id, userType);
+        return Result.success();
+    }
+
+    @Operation(summary = "修改用户状态", description = "管理员功能：启用或禁用用户账号")
+    @SaCheckLogin
+    @SaCheckRole("admin") // 只有管理员可以访问
+    @PutMapping("/{id}/status")
+    public Result<Void> updateUserStatus(
+            @Parameter(description = "用户ID") @PathVariable Long id,
+            @Parameter(description = "状态 0:禁用 1:启用") @RequestParam Integer status) {
+        userService.updateUserStatus(id, status);
         return Result.success();
     }
 

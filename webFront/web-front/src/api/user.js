@@ -29,5 +29,20 @@ export const userApi = {
   // 用户注销
   logout() {
     return request.post('/user/logout')
+  },
+
+  // 分页查询用户列表
+  getUserList(params) {
+    return request.get('/user/list', { params })
+  },
+
+  // 修改用户身份
+  updateUserType(id, userType) {
+    return request.put(`/user/${id}/type`, null, { params: { userType } })
+  },
+
+  // 修改用户状态
+  updateUserStatus(id, status) {
+    return request.put(`/user/${id}/status`, null, { params: { status } })
   }
 } 

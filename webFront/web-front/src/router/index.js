@@ -84,6 +84,12 @@ const routes = [
         name: 'OperationLog',
         component: () => import('../views/admin/OperationLog.vue'),
         meta: { requiresAuth: true, adminOnly: true }
+      },
+      {
+        path: 'admin/user-management',
+        name: 'UserManagement',
+        component: () => import('../views/admin/UserManagement.vue'),
+        meta: { requiresAuth: true, adminOnly: true }
       }
     ]
   }

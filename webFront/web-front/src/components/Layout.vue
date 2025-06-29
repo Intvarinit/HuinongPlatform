@@ -38,6 +38,14 @@
           <el-icon><Document /></el-icon>
           <span>操作日志</span>
         </el-menu-item>
+        
+        <el-menu-item
+          v-if="userStore.userInfo?.userType === 1"
+          index="/admin/user-management"
+        >
+          <el-icon><User /></el-icon>
+          <span>用户管理</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     
@@ -84,7 +92,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
 import { useUserStore } from '../stores/user'
-import { Refresh, Document } from '@element-plus/icons-vue'
+import { Refresh, Document, User } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -102,7 +110,8 @@ const getCurrentPageTitle = () => {
     '/compost/detail': '堆肥详情',
     '/inspection': '抽检管理',
     '/inspection/create': '创建抽检记录',
-    '/profile': '个人中心'
+    '/profile': '个人中心',
+    '/admin/user-management': '用户管理'
   }
   
   const path = route.path

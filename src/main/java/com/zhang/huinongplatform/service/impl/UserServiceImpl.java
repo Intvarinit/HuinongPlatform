@@ -2,6 +2,8 @@ package com.zhang.huinongplatform.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhang.huinongplatform.common.BizException;
 import com.zhang.huinongplatform.entity.User;
 import com.zhang.huinongplatform.entity.dto.LoginDTO;
@@ -14,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -121,5 +125,44 @@ public class UserServiceImpl implements UserService {
     @Override
     public void logout() {
         StpUtil.logout();
+    }
+
+    @Override
+    public IPage<User> getUserList(int pageNum, int pageSize, Integer userType, Integer status) {
+        Page<User> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        if (userType != null) {
+            wrapper.eq(User::getUserType, userType);
+        }
+        if (status != null) {
+            wrapper.eq(User::getStatus, status);
+        }
+        return userMapper.selectPage(page, wrapper);
+    }
+
+    @Override
+    public void updateUserType(Long id, Integer userType) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new BizException("用户不存在");
+        }
+        if (userType == null || userType < 1 || userType > 3) {
+            throw new BizException("用户类型无效");
+        }
+        user.setUserType(userType);
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public void updateUserStatus(Long id, Integer status) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new BizException("用户不存在");
+        }
+        if (status == null || (status != 0 && status != 1)) {
+            throw new BizException("状态值无效");
+        }
+        user.setStatus(status);
+        userMapper.updateById(user);
     }
 } 
