@@ -1,15 +1,18 @@
 package com.zhang.huinongplatform.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.zhang.huinongplatform.common.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("inspection_record")
+@TableName(value = "inspection_record", autoResultMap = true)
 public class InspectionRecord extends BaseEntity {
     private Long compostId;
     private Long inspectorId;
@@ -19,5 +22,6 @@ public class InspectionRecord extends BaseEntity {
     private BigDecimal humidity;
     private BigDecimal phValue;
     private String remark;
-    private String images; // 图片URL列表，多个用逗号分隔或JSON数组
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<String> images; // 图片URL列表，JSON数组
 } 
