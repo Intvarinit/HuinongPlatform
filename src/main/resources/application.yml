@@ -1,6 +1,21 @@
 server:
   port: 8080
 
+minio:
+  endpoint: http://localhost:9000
+  access-key: root
+  secret-key: 123456789
+  bucket-name: huinong-upload
+  bucket-policy: public # 可选public readonly/download    //创建的桶默认是private
+  minio:
+#    cleanup:    #自动清理文件
+#      enabled: true
+#      cron: "0 0 3 * * ?"  # 每天凌晨3点执行
+#      retention-days: 7
+    presigned:    #令牌，权限访问
+      expiry-hours: 168  # 7天有效期
+      refresh-threshold: 24  # 剩余24小时自动刷新
+
 logging:
   level:
     root: info  # 根日志级别
@@ -55,6 +70,15 @@ spring:
           max-interval: 10000
           multiplier: 2.0
 
+  # 文件上传配置
+  spring:
+    servlet:
+      multipart:
+        enabled: false  # 禁用默认文件上传机制
+        file-size-threshold: 0  # 所有文件直接存入内存
+        max-file-size: 10MB
+        max-request-size: 10MB
+
 #  web:
 #    resources:
 #      static-locations: classpath:/static/,classpath:/public/,classpath:/resources/,classpath:/META-INF/resources/,file:src/main/resources/upload/
@@ -108,4 +132,4 @@ aliyun:
     # 通知模板参数
     notification-template-code: SMS_987654321
     # 模拟模式：true-返回假消息，false-真实发送
-    mock-mode: true 
+    mock-mode: true

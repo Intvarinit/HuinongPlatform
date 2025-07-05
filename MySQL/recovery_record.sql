@@ -1,1 +1,0 @@
-INSERT INTO huinong_platform.recovery_record (id, user_id, crop_type, weight, location, status, remark, operator_id, appointment_time, create_time, update_time, deleted) VALUES (1, 2, '桔梗', 100.00, '北京市昌平区', 1, '审核通过', null, '2024-06-20 10:00:00', '2025-06-18 11:16:52', '2025-06-18 17:51:43', 0);
