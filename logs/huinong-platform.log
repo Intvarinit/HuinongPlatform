@@ -1,0 +1,16 @@
+2025-07-07 16:19:07 [main] INFO  c.z.h.HuiNongPlatformApplicationTests - Starting HuiNongPlatformApplicationTests using Java 17.0.12 on DESKTOP-BVE9NRQ with PID 23316 (started by Administrator in E:\devFiles\java\HuiNongPlatform)
+2025-07-07 16:19:07 [main] INFO  c.z.h.HuiNongPlatformApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2025-07-07 16:19:08 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-07 16:19:08 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-07 16:19:08 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2025-07-07 16:19:11 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Attempting to connect to: [localhost:5672]
+2025-07-07 16:19:11 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#74d22ddd:0/SimpleConnection@6ac0fd1d [delegate=amqp://admin@127.0.0.1:5672/, localPort= 57510]
+2025-07-07 16:19:11 [main] INFO  c.z.h.HuiNongPlatformApplicationTests - Started HuiNongPlatformApplicationTests in 4.362 seconds (JVM running for 4.994)
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#1-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#2-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#3-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#2-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#1-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2025-07-07 16:19:12 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#3-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
