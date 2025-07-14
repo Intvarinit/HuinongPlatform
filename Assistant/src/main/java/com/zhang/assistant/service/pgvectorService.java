@@ -1,8 +1,7 @@
 package com.zhang.assistant.service;
 
-import com.alibaba.nacos.shaded.com.google.gson.Gson;
-import com.alibaba.nacos.shaded.com.google.gson.reflect.TypeToken;
-import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhang.assistant.domain.Information;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
@@ -23,12 +22,11 @@ public class pgvectorService {
     @Autowired
     private ChatClient chatClient;
 
-    @Tool(description = "搜索与查询相关的文档内容")
+    @Tool(description = "当查询与惠农回收平台功能相关，搜索与查询相关的文档内容")
     public List<Document> searchSimilarDocuments(String query){
-
+        System.out.println("Call the RAG Tool！");
         // Retrieve documents similar to a query
-        List<Document> results = this.vectorStore.similaritySearch(SearchRequest.builder().query("Spring").topK(1).build());
-        return results;
+        return vectorStore.similaritySearch(SearchRequest.builder().query(query).topK(5).build());
     }
 
     public static List<Document> convertToDocuments(List<Information> data) {
@@ -109,7 +107,7 @@ public class pgvectorService {
     }
 
     public void addDocumentsToVectorStore(List<Document> documents) {
-        final int BATCH_SIZE = 25; // 定义每批次的最大大小
+        final int BATCH_SIZE = 10; // 定义每批次的最大大小
 
         for (int i = 0; i < documents.size(); i += BATCH_SIZE) {
             // 计算当前批次的结束索引

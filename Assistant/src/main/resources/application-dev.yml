@@ -1,0 +1,48 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true    #防止pgvector依赖覆盖其他SpringAI相关配置
+  application:
+    name: Assistant
+  ai:
+    openai:
+      api-key:
+      chat:
+        options:
+          #        model: qwen-vl-max
+          model: qwen-turbo
+          temperature: 0.7
+      embedding:
+        api-key:
+        options:
+          model: text-embedding-v3
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+
+    vectorstore:
+      pgvector:
+        index-type: HNSW    #?Hierarchical Navigable Small World
+        distance-type: COSINE_DISTANCE    #相似度评估，余弦距离(COSINE_DISTANCE)
+        dimensions: 1024     #向量维度设置成1024
+        max-document-batch-size: 10000 # 最大文档批次
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+            schema: classpath:schema-postgresql.sql
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/testdb
+    username: postgres
+    password: 123456
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+#logging:
+#  level:
+#    org.springframework.ai.chat.client.advisor: debug
+
+server:
+  port: 8090

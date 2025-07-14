@@ -1,0 +1,7 @@
+docker run -d \
+  --name my-pgvector \
+  -e POSTGRES_PASSWORD=123456 \
+  -e POSTGRES_DB=testdb \
+  -v E:/devTools/PostgreSQL:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  ankane/pgvector
